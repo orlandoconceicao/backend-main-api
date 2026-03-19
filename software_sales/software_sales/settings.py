@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
 
+AUTH_USER_MODEL = 'courses.Usuario'
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8q4r!ag2jb=n&l2nc01k-#gx^90ag8!9pkxauql+b%*lv+7%02',
@@ -96,3 +97,5 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     }
+
+    
