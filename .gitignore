@@ -1,1 +1,63 @@
 caminho.txt
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtualenv
+venv/
+env/
+.venv/
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
+
+# Media & Static (se não quiser versionar)
+media/
+staticfiles/
+
+# Environment variables
+.env
+.env.*
+
+# Migrations (opcional: só ignore se souber o que está fazendo)
+# */migrations/
+# !*/migrations/__init__.py
+
+# IDEs
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage / Tests
+htmlcov/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# mypy / type check
+.mypy_cache/
+.dmypy.json
+
+# Docker
+*.pid
+*.seed
+*.pid.lock
+
+# Logs
+*.log
+
+# Node (caso tenha frontend junto)
+node_modules/
+
+# Build
+dist/
+build/
