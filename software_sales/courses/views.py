@@ -237,5 +237,4 @@ class AdminCompraViewSet(viewsets.ModelViewSet):
 
         compra.status = CompraStatus.COMPLETED
         compra.save(update_fields=['status'])
-
         return response(True, data="Reembolso rejeitado com sucesso")
