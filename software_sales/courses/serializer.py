@@ -34,7 +34,7 @@ class CursoSerializer(serializers.ModelSerializer):
         model = Curso
         fields = [
             'id', 'nome', 'descricao', 'preco',
-            'criado_por', 'criado_por_nome',
+            'criado_por', 'criado_por',
             'total_vendas', 'total_avaliacoes',
             'criacao'
         ]
