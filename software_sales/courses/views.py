@@ -10,10 +10,7 @@ from datetime import timedelta
 
 from .models import Usuario, Curso, Compra, Avaliacao, CompraStatus
 
-
-# ==============================
-# 🔧 RESPONSE PADRÃO
-# ==============================
+# RESPONSE PADRÃO
 def response(success=True, data=None, error=None, status_code=status.HTTP_200_OK):
     # Padroniza todas as respostas da API
     return Response({
@@ -22,19 +19,13 @@ def response(success=True, data=None, error=None, status_code=status.HTTP_200_OK
         "error": error
     }, status=status_code)
 
-
-# ==============================
-# 🔐 PERMISSÕES
-# ==============================
+# PERMISSÕES
 class IsAdmin(permissions.BasePermission):
     # Permite acesso apenas para admins
     def has_permission(self, request, view):
         return request.user and request.user.is_staff
 
-
-# ==============================
-# 🔑 USUÁRIO
-# ==============================
+# USUÁRIO
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
 
@@ -220,10 +211,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
 
         return response(True, data="Reembolso realizado com sucesso")
 
-
-# ==============================
-# 🛠 ADMIN
-# ==============================
+# ADMIN
 class AdminCursoViewSet(viewsets.ModelViewSet):
     queryset = Curso.objects.all()
     permission_classes = [permissions.IsAuthenticated, IsAdmin]

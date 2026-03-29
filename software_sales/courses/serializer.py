@@ -34,8 +34,7 @@ class CursoSerializer(serializers.ModelSerializer):
         model = Curso
         fields = [
             'id', 'nome', 'descricao', 'preco',
-            'criado_por', 'criado_por',
-            'total_vendas', 'total_avaliacoes',
+            'criado_por', 'total_vendas', 'total_avaliacoes',
             'criacao'
         ]
         # Impede manipulação de dados sensíveis
