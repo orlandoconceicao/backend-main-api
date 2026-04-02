@@ -36,7 +36,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
             'login': [permissions.AllowAny],
             'cursos': [permissions.AllowAny],
         }
-        return [perm() for perm in permission_map.get(self.action, [permissions.IsAuthenticated])]
+        return [perm() for perm in permission_map.get(self.action, [self.get_permissions.IsAuthenticated])]
 
     # Cadastro de usuário
     def create(self, request):

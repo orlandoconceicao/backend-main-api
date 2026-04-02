@@ -91,7 +91,7 @@ class Avaliacao(Base):
         max_digits=3,
         decimal_places=2,
         validators=[
-            MinValueValidator(Decimal('0.00')),  # permite nota 0
+            MinValueValidator(Decimal('1.00')),  # permite nota 1
             MaxValueValidator(Decimal('5.00'))
         ]
     )
@@ -159,7 +159,7 @@ class Compra(Base):
     preco = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        validators=[MinValueValidator(Decimal('0.00'))]
+        validators=[MinValueValidator(Decimal('1.00'))]
     )
 
     status = models.CharField(

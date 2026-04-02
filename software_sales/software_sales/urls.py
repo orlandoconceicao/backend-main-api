@@ -1,36 +1,27 @@
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-
-# Importa ViewSets principais
-from courses.views import (
-    UsuarioViewSet,
-    AdminCursoViewSet,
-    AdminAvaliacaoViewSet,
-    AdminCompraViewSet
-)
-
-# Router principal da API
-router = DefaultRouter()
-
-# Rotas públicas e do usuário
-router.register(r'usuarios', UsuarioViewSet, basename='usuarios')
-
-# Rotas administrativas (separadas por organização)
-router.register(r'admin/cursos', AdminCursoViewSet, basename='admin-cursos')
-router.register(r'admin/avaliacoes', AdminAvaliacaoViewSet, basename='admin-avaliacoes')
-router.register(r'admin/compras', AdminCompraViewSet, basename='admin-compras')
 
 urlpatterns = [
-    # Admin Django
+    # Painel administrativo padrão do Django
     path('admin/', admin.site.urls),
 
-    # Rotas principais da API
-    path('api/', include(router.urls)),
-
-    # Rotas separadas por app (melhor organização)
+    # Todas as rotas da API (delegadas ao app courses)
     path('api/', include('courses.urls')),
 
-    # Autenticação JWT
+    # Rotas de autenticação JWT (token/refresh)
     path('api/auth/', include('rest_framework_simplejwt.urls')),
 ]
+'''
+---------Usuários
+/api/usuarios/
+/api/usuarios/login/
+/api/usuarios/cursos/
+/api/usuarios/comprar/
+/api/usuarios/avaliar/
+/api/usuarios/reembolso/
+---------Admin
+/api/admin/cursos/
+/api/admin/avaliacoes/
+/api/admin/compras/
+/api/admin/compras/{id}/rejeitar_reembolso/
+'''

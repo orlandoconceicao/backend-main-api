@@ -107,7 +107,7 @@ class CompraSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Compra
-        fields = ['id', 'usuario', 'curso', 'preco', 'status', 'data']
+        fields = ['id', 'usuario', 'curso', 'preco', 'status']
         # Campos sensiveis controlados por backend
         read_only_fields = ['id', 'data', 'usuario', 'preco', 'status']
 
