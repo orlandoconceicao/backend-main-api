@@ -8,8 +8,6 @@ urlpatterns = [
     # Todas as rotas da API (delegadas ao app courses)
     path('api/', include('courses.urls')),
 
-    # Rotas de autenticação JWT (token/refresh)
-    path('api/auth/', include('rest_framework_simplejwt.urls')),
 ]
 '''
 ---------Usuários
