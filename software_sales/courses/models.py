@@ -17,7 +17,6 @@ class Base(models.Model):
 class Usuario(Base, AbstractUser):
     username = models.CharField(max_length=150, unique=True)
     email = models.EmailField(unique=True, db_index=True)  # login principal
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
