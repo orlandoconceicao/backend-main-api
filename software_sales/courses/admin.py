@@ -14,6 +14,12 @@ class CompraInline(admin.TabularInline):
     readonly_fields = ('usuario', 'curso', 'preco', 'status', 'criacao', 'atualizacao')
     can_delete = False
 
+class CursoInline(admin.TabularInline):
+    model = Curso
+    extra = 0
+    readonly_fields = ('nome', 'preco', 'ativo', 'criacao')
+    can_delete = False
+    
 # Ações customizadas
 @admin.action(description='Marcar como Concluído')
 def marcar_concluido(modeladmin, request, queryset):
@@ -64,4 +70,4 @@ class UsuarioAdmin(admin.ModelAdmin):
     search_fields = ('username', 'email')
     ordering = ('-criacao',)
     readonly_fields = ('criacao', 'atualizacao')
-    inlines = [CursoAdmin, CompraInline]
+    inlines = [CursoInline, CompraInline]

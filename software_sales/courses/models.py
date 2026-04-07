@@ -2,10 +2,9 @@ from decimal import Decimal, ROUND_HALF_UP
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxLengthValidator, MinValueValidator, MaxValueValidator
 from django.db import models
-from django.db.models import F
+
 
 class Base(models.Model):
-    # Campos padrão reutilizáveis
     criacao = models.DateTimeField(auto_now_add=True)
     atualizacao = models.DateTimeField(auto_now=True)
     ativo = models.BooleanField(default=True)
@@ -13,15 +12,17 @@ class Base(models.Model):
     class Meta:
         abstract = True
 
+
 # Usuário
 class Usuario(Base, AbstractUser):
     username = models.CharField(max_length=150, unique=True)
-    email = models.EmailField(unique=True, db_index=True)  # login principal
+    email = models.EmailField(unique=True, db_index=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.email  # mais limpo para logs/admin
+        return self.email
 
     class Meta:
         verbose_name = 'Usuario'
@@ -31,6 +32,7 @@ class Usuario(Base, AbstractUser):
             models.Index(fields=['criacao']),
             models.Index(fields=['email']),
         ]
+
 
 # Curso
 class Curso(Base):
@@ -52,7 +54,7 @@ class Curso(Base):
         related_name='cursos'
     )
 
-    total_vendas = models.PositiveIntegerField(default=0)  # contador otimizado
+    total_vendas = models.PositiveIntegerField(default=0)
 
     media_avaliacoes = models.DecimalField(
         max_digits=3,
@@ -72,6 +74,7 @@ class Curso(Base):
             models.Index(fields=['criado_por']),
         ]
 
+
 # Avaliação
 class Avaliacao(Base):
     usuario = models.ForeignKey(
@@ -90,7 +93,7 @@ class Avaliacao(Base):
         max_digits=3,
         decimal_places=2,
         validators=[
-            MinValueValidator(Decimal('1.00')),  # permite nota 1
+            MinValueValidator(Decimal('1.00')),
             MaxValueValidator(Decimal('5.00'))
         ]
     )
@@ -101,18 +104,8 @@ class Avaliacao(Base):
     )
 
     def save(self, *args, **kwargs):
+        # 👇 agora só salva (média vai via SIGNAL)
         super().save(*args, **kwargs)
-
-        # Atualiza média do curso após nova avaliação
-        media = self.curso.avaliacoes.aggregate(
-            media=models.Avg('nota')
-        )['media'] or Decimal('0.00')
-
-        self.curso.media_avaliacoes = Decimal(media).quantize(
-            Decimal('0.01'),
-            rounding=ROUND_HALF_UP
-        )
-        self.curso.save(update_fields=['media_avaliacoes'])
 
     def __str__(self):
         return f"{self.usuario.email} avaliou {self.curso.nome} ({self.nota})"
@@ -125,7 +118,7 @@ class Avaliacao(Base):
         constraints = [
             models.UniqueConstraint(
                 fields=['usuario', 'curso'],
-                name='unique_avaliacao'  # evita duplicidade
+                name='unique_avaliacao'
             )
         ]
 
@@ -135,11 +128,13 @@ class Avaliacao(Base):
             models.Index(fields=['curso', 'usuario']),
         ]
 
+
 # CompraStatus
 class CompraStatus(models.TextChoices):
     PENDING = "pending", "Pendente"
     COMPLETED = "completed", "Concluído"
     REFUNDED = "refunded", "Reembolsado"
+
 
 # Compra
 class Compra(Base):
@@ -165,46 +160,21 @@ class Compra(Base):
         max_length=10,
         choices=CompraStatus.choices,
         default=CompraStatus.PENDING,
-        db_index=True  # melhora filtro por status
+        db_index=True
     )
 
     def save(self, *args, **kwargs):
-        is_new = self.pk is None
-        status_anterior = None
+        # 👇 SEM lógica de vendas (isso agora é SIGNAL)
 
-        # Busca status antigo apenas se já existir
-        if not is_new:
-            status_anterior = Compra.objects.get(pk=self.pk).status
-
-        # Define preço automaticamente se não informado
         if not self.preco:
             self.preco = self.curso.preco
 
-        # Garante precisão financeira
         self.preco = Decimal(self.preco).quantize(
             Decimal('0.01'),
             rounding=ROUND_HALF_UP
         )
 
         super().save(*args, **kwargs)
-
-        # Incrementa vendas apenas na transição para concluído
-        if (
-            self.status == CompraStatus.COMPLETED and
-            status_anterior != CompraStatus.COMPLETED
-        ):
-            Curso.objects.filter(pk=self.curso.pk).update(
-                total_vendas=F('total_vendas') + 1
-            )
-
-        # Decrementa caso seja reembolsado
-        if (
-            self.status == CompraStatus.REFUNDED and
-            status_anterior == CompraStatus.COMPLETED
-        ):
-            Curso.objects.filter(pk=self.curso.pk).update(
-                total_vendas=F('total_vendas') - 1
-            )
 
     def __str__(self):
         return f"{self.usuario.email} - {self.curso.nome} ({self.status})"
@@ -217,7 +187,7 @@ class Compra(Base):
         constraints = [
             models.UniqueConstraint(
                 fields=['usuario', 'curso'],
-                name='unique_compra'  # evita compra duplicada
+                name='unique_compra'
             )
         ]
 
