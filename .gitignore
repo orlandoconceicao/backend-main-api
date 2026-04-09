@@ -1,5 +1,6 @@
-caminho.txt
-# Python
+# =========================
+# 🐍 PYTHON / DJANGO
+# =========================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -16,48 +17,52 @@ env/
 db.sqlite3
 db.sqlite3-journal
 
-# Media & Static (se não quiser versionar)
+# Static / Media
 media/
 staticfiles/
 
-# Environment variables
+
 .env
 .env.*
 
-# Migrations (opcional: só ignore se souber o que está fazendo)
+
 # */migrations/
 # !*/migrations/__init__.py
 
-# IDEs
 .vscode/
 .idea/
 
-# OS
+
 .DS_Store
 Thumbs.db
 
-# Coverage / Tests
+
 htmlcov/
 .coverage
 .coverage.*
 .cache
 .pytest_cache/
 
-# mypy / type check
+
 .mypy_cache/
 .dmypy.json
 
-# Docker
+
 *.pid
 *.seed
 *.pid.lock
 
-# Logs
-*.log
-
-# Node (caso tenha frontend junto)
 node_modules/
+frontend/node_modules/
 
-# Build
-dist/
+# Build React
+frontend/build/
 build/
+dist/
+
+# Logs Node
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+coverage/
