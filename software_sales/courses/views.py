@@ -7,9 +7,9 @@ from django.db.models import Avg
 from django.db import transaction
 from django.utils import timezone
 from datetime import timedelta
-
 from .models import Usuario, Curso, Compra, Avaliacao, CompraStatus
 from .serializers import UsuarioSerializer, CursoSerializer, AvaliacaoSerializer, CompraSerializer
+from .filters import CursoFilter, AvaliacaoFilter, CompraFilter
 
 # RESPONSE PADRÃO
 def response(success=True, data=None, error=None, status_code=status.HTTP_200_OK):
@@ -143,6 +143,7 @@ class AdminCompraViewSet(viewsets.ModelViewSet):
     queryset = Compra.objects.all()
     serializer_class = CompraSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdmin]
+    filterset_class = CompraFilter
 
     @action(detail=True, methods=['post'])
     def rejeitar_reembolso(self, request, pk=None):
@@ -160,9 +161,11 @@ class CursoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Curso.objects.filter(ativo=True).annotate(media=Avg('avaliacoes__nota'))
     serializer_class = CursoSerializer
     permission_classes = [permissions.AllowAny]
+    filterset_class = CursoFilter
 
 # AVALIAÇÕES PÚBLICAS
 class AvaliacaoViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Avaliacao.objects.select_related('usuario', 'curso')
     serializer_class = AvaliacaoSerializer
     permission_classes = [permissions.AllowAny]
+    filterset_class = AvaliacaoFilter
